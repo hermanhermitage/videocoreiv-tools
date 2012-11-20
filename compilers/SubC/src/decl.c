@@ -440,6 +440,8 @@ static void signature(int fn, int from, int to) {
 		types[i] = Prims[--to];
 	types[i] = 0;
 	if (NULL == Mtext[fn]) {
+		if (CEXTERN == Stcls[fn]) genpublic(Names[fn]); 
+		if (CSPROTO == Stcls[fn]) genstatic(Names[fn]); 
 		Mtext[fn] = galloc((i+1) * sizeof(int));
 		memcpy(Mtext[fn], types, (i+1) * sizeof(int));
 	}
@@ -482,7 +484,8 @@ void decl(int clss, int prim) {
 				Token = scan();
 				lsize = localdecls();
 				gentext();
-				if (CPUBLIC == clss) genpublic(name);
+				/* if (CPUBLIC == clss) genpublic(name); */
+				/* if (CSTATIC == clss) genstatic(name); */
 				genname(name);
 				genentry();
 				genstack(lsize);

@@ -21,7 +21,9 @@ void load(void) {
 int label(void) {
 	static int id = 1;
 
-	return id++;
+	id++;
+	cgdeclare(id);
+	return id;
 }
 
 void spill(void) {
@@ -59,6 +61,12 @@ void lgen(char *s, char *inst, int n) {
 	fputc('\n', Outfile);
 }
 
+void lgenraw(char *s, char *inst, int n) {
+	if (NULL == Outfile) return;
+	fprintf(Outfile, s, inst, LPREFIX, n);
+	fputc('\n', Outfile);
+}
+
 void lgen2(char *s, int v1, int v2) {
 	if (NULL == Outfile) return;
 	fputc('\t', Outfile);
@@ -73,6 +81,12 @@ void sgen(char *s, char *inst, char *s2) {
 	fputc('\n', Outfile);
 }
 
+void sgenraw(char *s, char *inst, char *s2) {
+	if (NULL == Outfile) return;
+	fprintf(Outfile, s, inst, s2);
+	fputc('\n', Outfile);
+}
+
 void sgen2(char *s, char *inst, int v, char *s2) {
 	if (NULL == Outfile) return;
 	fputc('\t', Outfile);
@@ -81,6 +95,11 @@ void sgen2(char *s, char *inst, int v, char *s2) {
 }
 
 void genlab(int id) {
+	if (NULL == Outfile) return;
+	cglab(id);	
+}
+
+void _genlab(int id) {
 	if (NULL == Outfile) return;
 	fprintf(Outfile, "%c%d:", LPREFIX, id);
 }
@@ -124,12 +143,20 @@ void genpostlude(void) {
 }
 
 void genname(char *name) {
+	cgname(name);
+}
+
+void _genname(char *name) {
 	genraw(gsym(name));
 	genraw(":");
 }
 
 void genpublic(char *name) {
 	cgpublic(gsym(name));
+}
+
+void genstatic(char *name) {
+	cgstatic(gsym(name));
 }
 
 /* loading values */

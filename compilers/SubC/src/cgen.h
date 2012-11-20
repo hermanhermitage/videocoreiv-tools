@@ -3,6 +3,10 @@
  *	Code generator interface
  */
 
+void cgdeclare(int id);
+void cglab(int id);
+void cgname(char *name);
+
 void cgadd(void);
 void cgand(void);
 void cgargc(void);
